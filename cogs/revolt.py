@@ -24,7 +24,6 @@ import aiohttp
 import revolt
 import traceback
 import time
-from utils import log
 import hashlib
 import random
 import string
