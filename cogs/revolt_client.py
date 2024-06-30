@@ -21,16 +21,9 @@ from nextcord.ext import commands
 from revolt.ext import commands as rv_commands
 import asyncio
 import aiohttp
-import revolt
 import traceback
-import time
-import hashlib
-import random
-import string
 from dotenv import load_dotenv
 import os
-import emoji as pymoji
-import datetime
 
 load_dotenv() # Do not check success
 
@@ -49,22 +42,13 @@ class Revolt(commands.Cog,name='<:revoltsupport:1211013978558304266> Revolt Supp
             self.bot.revolt_client = None
             self.bot.revolt_session = None
             self.bot.revolt_client_task = asyncio.create_task(self.revolt_boot())
-        self.logger = log.buildlogger(self.bot.package, 'revolt.core', self.bot.loglevel)
 
     class Client(rv_commands.CommandsClient):
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
-            self.bot = None
-            self.logger = None
-
-        def add_logger(self,logger):
-            self.logger = logger
-
-        async def get_prefix(self, message: revolt.Message):
-            return self.bot.command_prefix
 
         async def on_ready(self):
-            self.logger.info('Revolt client booted!')
+            print('Revolt client booted!')
 
     async def revolt_boot(self):
         if self.bot.revolt_client is None:
@@ -72,7 +56,6 @@ class Revolt(commands.Cog,name='<:revoltsupport:1211013978558304266> Revolt Supp
                 async with aiohttp.ClientSession() as session:
                     self.bot.revolt_session = session
                     self.bot.revolt_client = self.Client(session, os.environ.get('TOKEN_REVOLT'))
-                    self.bot.revolt_client.add_bot(self.bot)
                     print('Booting Revolt client...')
                     try:
                         await self.bot.revolt_client.start()
